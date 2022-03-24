@@ -1,11 +1,13 @@
-FROM golang:1.8
+FROM public.ecr.aws/bitnami/python:latest
 
-# TODO: Use a container to build this and just use binary
+WORKDIR /usr/src/app
 
-COPY ./main.go /go/src/github.com/rnzsgh/hello-world-golang/
-WORKDIR /go/src/github.com/rnzsgh/hello-world-golang
-RUN go get ./ && go build -o main . && rm -Rf main.go && mv main /
+COPY requirements.txt ./
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 EXPOSE 80
 
-CMD [ "/main" ]
+CMD [ "python", "-u", "./test.py" ]
